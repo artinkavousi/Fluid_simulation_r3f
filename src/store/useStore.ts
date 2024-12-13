@@ -1,23 +1,6 @@
 import { create } from 'zustand';
 
-export interface EmitterProps {
-  type: 'point'|'line'|'dye';
-  position?: [number,number];
-  radius?: number;
-  color?: [number,number,number];
-  start?: [number,number];
-  end?: [number,number];
-}
-
-interface Keyframe {
-  time: number;
-  emitterId: string;
-  property: string;
-  value: any;
-}
-
-interface AppState {
-  resolution: number;
+export interface FluidParams {
   dt: number;
   dyeDecay: number;
   pressureIterations: number;
@@ -45,35 +28,20 @@ interface AppState {
   noiseScale: number;
   pulseSpeed: number;
   waveAmplitude: number;
-  currentPalette: string;
-
-  emitters: Record<string, EmitterProps>;
-  addEmitter: (id:string, props:EmitterProps)=>void;
-  updateEmitter: (id:string, updates:Partial<EmitterProps>)=>void;
-  removeEmitter: (id:string)=>void;
-
-  selectedEmitter: string|null;
-  setSelectedEmitter: (id:string|null)=>void;
-
-  audioData: Uint8Array|null;
-  setAudioData: (data:Uint8Array|null)=>void;
-
-  timeline: Keyframe[];
-  addKeyframe: (kf:Keyframe)=>void;
-
-  backgroundColor: [number,number,number];
-
-  mousePos: [number,number];
-  setMousePos: (pos:[number,number])=>void;
-
-  renderMode: 'dye'|'velocity'|'pressure'|'temperature'|'rainbow'|'kaleidoscope';
-  fluidSolver: any;
-
-  velocityTexture: THREE.Texture | null;
 }
 
-export const useStore = create<AppState>((set,get) => ({
-  resolution: 1.0,
+interface AppState extends FluidParams {
+  backgroundColor: [number, number, number];
+  mousePos: [number, number];
+  setMousePos: (pos: [number, number]) => void;
+  renderMode: 'dye' | 'velocity' | 'pressure' | 'temperature';
+  setRenderMode: (mode: 'dye' | 'velocity' | 'pressure' | 'temperature') => void;
+  audioData: Uint8Array | null;
+  setAudioData: (data: Uint8Array | null) => void;
+}
+
+export const useStore = create<AppState>((set) => ({
+  // Simulation parameters
   dt: 0.016,
   dyeDecay: 0.98,
   pressureIterations: 20,
@@ -101,33 +69,15 @@ export const useStore = create<AppState>((set,get) => ({
   noiseScale: 1.0,
   pulseSpeed: 1.0,
   waveAmplitude: 0.0,
-  currentPalette: 'default',
 
-  emitters: {},
-  addEmitter:(id,props)=>set(state=>({emitters:{...state.emitters,[id]:props}})),
-  updateEmitter:(id,updates)=>set(state=>({emitters:{...state.emitters,[id]:{...state.emitters[id],...updates}}})),
-  removeEmitter:(id)=>set(state=>{
-    const newEmit = {...state.emitters};
-    delete newEmit[id];
-    return {emitters:newEmit};
-  }),
+  // Display settings
+  backgroundColor: [0, 0, 0],
+  mousePos: [0, 0],
+  setMousePos: (pos) => set({ mousePos: pos }),
+  renderMode: 'dye',
+  setRenderMode: (mode) => set({ renderMode: mode }),
 
-  selectedEmitter:null,
-  setSelectedEmitter:(id)=>set({selectedEmitter:id}),
-
-  audioData:null,
-  setAudioData:(data)=>set({audioData:data}),
-
-  timeline:[],
-  addKeyframe:(kf)=>set(state=>({timeline:[...state.timeline,kf]})),
-
-  backgroundColor:[0,0,0],
-
-  mousePos:[0,0],
-  setMousePos:(pos)=>set({mousePos:pos}),
-
-  renderMode:'dye',
-  fluidSolver: null,
-
-  velocityTexture: null,
+  // Audio
+  audioData: null,
+  setAudioData: (data) => set({ audioData: data })
 })); 

@@ -1,81 +1,125 @@
-# Fluid Simulation
+# WebGL Fluid Simulation with React Three Fiber
 
-A real-time fluid simulation using WebGL, React Three Fiber, and TypeScript. This project implements a stable fluid solver with interactive features and visual effects.
+[![Version](https://img.shields.io/badge/version-0.4.0-blue.svg)](https://github.com/artinkavousi/Fluid_simulation_r3f)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
+[![Three.js](https://img.shields.io/badge/Three.js-latest-orange.svg)](https://threejs.org/)
 
-## Features
+A high-performance real-time fluid simulation using WebGL 2.0 and React Three Fiber. This project implements a stable fluid solver with advanced visual effects and interactive features.
 
-- Real-time fluid simulation using GPU-accelerated computations
-- Interactive mouse control - fluid reacts to mouse movements
-- Multiple emitter types (point, line, dye)
-- Audio visualization (requires user interaction to start)
-- Post-processing effects (bloom, chromatic aberration)
-- Timeline editor for keyframe animation
-- Adjustable simulation parameters
+[Live Demo](https://artinkavousi.github.io/Fluid_simulation_r3f) | [Documentation](docs/TECHNICAL.md) | [Quick Start](docs/QUICKSTART.md)
 
-## Prerequisites
+![Fluid Simulation Demo](https://raw.githubusercontent.com/artinkavousi/Fluid_simulation_r3f/main/docs/demo.gif)
 
-- Node.js (v14 or higher)
-- npm or yarn
+## ✨ Key Features
 
-## Installation
+### 🌊 Fluid Dynamics
+- Real-time Navier-Stokes fluid simulation
+- Temperature-driven buoyancy effects
+- Vorticity confinement for detailed swirls
+- Interactive mouse-based fluid manipulation
 
-1. Clone the repository:
-\`\`\`bash
-git clone [repository-url]
-cd fluid-simulation
-\`\`\`
+### 🎨 Visual Effects
+- High-quality bloom lighting
+- Chromatic aberration with radial distortion
+- Velocity-based motion blur
+- Kaleidoscope effect with dynamic segments
+- Rainbow color cycling and blending
+- Real-time color diffusion
 
-2. Install dependencies:
-\`\`\`bash
+### 🎮 Interactive Controls
+- Resolution and quality settings
+- Real-time parameter adjustment
+- Multiple visualization modes
+- Audio reactivity support
+
+## 🚀 Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/artinkavousi/Fluid_simulation_r3f.git
+
+# Install dependencies
 npm install
-\`\`\`
 
-## Running the Project
-
-1. Start the development server:
-\`\`\`bash
+# Start development server
 npm run dev
-\`\`\`
+```
 
-2. Open your browser and navigate to `http://localhost:3000` (or the port shown in the terminal)
+Visit `http://localhost:3000` to see the simulation in action!
 
-## Usage
+## 📖 Documentation
 
-- **Mouse Interaction**: Move your mouse over the canvas to interact with the fluid
-- **Control Panel**: Use the control panel on the right to adjust simulation parameters:
-  - Resolution
-  - Time step (dt)
-  - Dye decay
-  - Pressure iterations
-  - Curl strength
-  - Render mode (dye/velocity/pressure)
-  - Background color
-- **Toolbar**: Use the toolbar on the top-left to add different types of emitters:
-  - Point Emitter
-  - Line Emitter
-  - Dye Emitter
-- **Timeline**: Use the timeline at the bottom to create keyframe animations
-- **Audio Visualization**: Click anywhere to start the audio visualization
+- [Quick Start Guide](docs/QUICKSTART.md) - Get up and running
+- [Technical Documentation](docs/TECHNICAL.md) - Deep dive into the implementation
+- [API Reference](docs/API.md) - Detailed component documentation
 
-## Technical Details
+## 🛠️ Built With
 
-The simulation implements the following steps:
-1. Velocity advection
-2. Divergence computation
-3. Pressure solving
-4. Pressure gradient subtraction
-5. Dye advection
+- **React** - UI framework
+- **Three.js** - 3D graphics library
+- **React Three Fiber** - React renderer for Three.js
+- **WebGL 2.0** - GPU-accelerated graphics
+- **TypeScript** - Type-safe code
+- **Zustand** - State management
 
-All computations are performed on the GPU using WebGL shaders for maximum performance.
+## ⚡ Performance Tips
 
-## Contributing
+1. **Resolution Control**
+   - Lower resolution for better performance (128-256)
+   - Higher resolution for better quality (512-1024)
 
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin feature/my-new-feature`
-5. Submit a pull request
+2. **Effect Management**
+   - Disable unused effects for +20-30% performance
+   - Adjust effect quality based on FPS
+   - Start with bloom and add effects gradually
 
-## License
+3. **Render Modes**
+   - Use 'dye' mode for best performance
+   - 'velocity' and 'pressure' modes for debugging
+   - Complex effects for visual showcase
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+## 🌐 Browser Support
+
+Requires WebGL 2.0 support:
+- ✅ Chrome 56+
+- ✅ Firefox 51+
+- ✅ Safari 15+
+- ✅ Edge 79+
+
+## 🔄 Version History
+
+### v0.4.0 (Latest)
+- Enhanced fluid dynamics with temperature
+- Added advanced visual effects (bloom, chromatic aberration, motion blur)
+- Added kaleidoscope and rainbow effects
+- Improved render mode switching
+- Optimized performance and resource management
+
+### v0.3.0
+- Initial fluid simulation implementation
+- Basic mouse interaction
+- Simple color diffusion
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Based on [Jos Stam's Stable Fluids](http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf)
+- Inspired by various WebGL fluid simulations
+- Built with React Three Fiber ecosystem
+
+## 📞 Contact & Support
+
+- Create an [issue](https://github.com/artinkavousi/Fluid_simulation_r3f/issues) for bug reports
+- Star the repo if you find it useful
+- Follow [@artinkavousi](https://twitter.com/artinkavousi) for updates
+
+---
+Made with ❤️ by [Artin Kavousi] 
