@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useStore } from '../store/useStore';
 import { AudioEQ } from './UI/AudioEQ';
+import { FluidSolver } from '../utils/FluidSolver';
 
 interface Props {
   children: React.ReactNode;
@@ -8,6 +9,7 @@ interface Props {
 
 export function SimulationManager({ children }: Props) {
   const setAudioData = useStore(state => state.setAudioData);
+  const fluidSolver = useStore(state => state.fluidSolver);
   const audioContextRef = useRef<AudioContext>();
   const analyzerRef = useRef<AnalyserNode>();
   const dataArrayRef = useRef<Uint8Array>();
@@ -24,16 +26,28 @@ export function SimulationManager({ children }: Props) {
         // Start the update loop
         const updateData = () => {
           if (analyzerRef.current && dataArrayRef.current) {
-            // Simulate audio data
-            for (let i = 0; i < dataArrayRef.current.length; i++) {
-              dataArrayRef.current[i] = Math.random() * 256;
-            }
+            analyzerRef.current.getByteFrequencyData(dataArrayRef.current);
             setAudioData(dataArrayRef.current);
+            
+            // Update fluid solver with audio data
+            if (fluidSolver) {
+              fluidSolver.setAudioData(dataArrayRef.current);
+            }
           }
           animationFrameRef.current = requestAnimationFrame(updateData);
         };
 
         updateData();
+
+        // Try to get audio input
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const source = audioContextRef.current.createMediaStreamSource(stream);
+          source.connect(analyzerRef.current);
+        } catch (err) {
+          console.log('No audio input available, using simulated data');
+          // Continue with simulated data if no microphone access
+        }
       } catch (error) {
         console.error('Audio setup failed:', error);
       }
@@ -49,7 +63,7 @@ export function SimulationManager({ children }: Props) {
         audioContextRef.current.close();
       }
     };
-  }, []);
+  }, [setAudioData, fluidSolver]);
 
   return (
     <>
