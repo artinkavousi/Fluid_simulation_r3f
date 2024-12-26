@@ -25,8 +25,10 @@ export class PointEmitter extends BaseEmitter {
   }
 
   public update(time: number): void {
-    if (this.mesh && this.props.position) {
-      this.mesh.position.set(this.props.position[0], this.props.position[1], 0);
+    // Use time to create pulsating effect
+    const scale = 1 + Math.sin(time * 3) * 0.2;
+    if (this.mesh) {
+      this.mesh.scale.set(scale, scale, 1);
     }
   }
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useStore } from '../store/useStore';
 import { AudioEQ } from './UI/AudioEQ';
-import { FluidSolver } from '../utils/FluidSolver';
 
 interface Props {
   children: React.ReactNode;

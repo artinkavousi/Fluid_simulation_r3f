@@ -905,15 +905,6 @@ export class FluidSolver {
     [this.velocityFBO1, this.velocityFBO2] = [this.velocityFBO2, this.velocityFBO1];
   }
 
-  private applyBuoyancy() {
-    this.buoyancyMaterial.uniforms.velocity.value = this.velocityFBO1.texture;
-    this.buoyancyMaterial.uniforms.temperature.value = this.temperatureFBO1.texture;
-    this.quad.material = this.buoyancyMaterial;
-    this.gl.setRenderTarget(this.velocityFBO2);
-    this.gl.render(this.scene, this.camera);
-    [this.velocityFBO1, this.velocityFBO2] = [this.velocityFBO2, this.velocityFBO1];
-  }
-
   splat(x: number, y: number, dx: number, dy: number, color: [number, number, number], temperature: number = 1.0) {
     const currentRT = this.gl.getRenderTarget();
     const velocity = Math.sqrt(dx * dx + dy * dy);
@@ -1006,12 +997,5 @@ export class FluidSolver {
     this.gl.setRenderTarget(this.temperatureFBO2);
     this.gl.render(this.scene, this.camera);
     [this.temperatureFBO1, this.temperatureFBO2] = [this.temperatureFBO2, this.temperatureFBO1];
-  }
-
-  private clear(target: THREE.WebGLRenderTarget) {
-    const currentRT = this.gl.getRenderTarget();
-    this.gl.setRenderTarget(target);
-    this.gl.clear();
-    this.gl.setRenderTarget(currentRT);
   }
 }

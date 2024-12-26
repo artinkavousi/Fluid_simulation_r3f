@@ -1,4 +1,18 @@
 import { create } from 'zustand';
+import { FluidSolver } from '../utils/FluidSolver';
+import { ColorPalette } from '../types/presets';
+
+export interface EmitterProps {
+  type: 'point' | 'line' | 'dye';
+  position: [number, number];
+  color: [number, number, number];
+  strength: number;
+  radius: number;
+  start?: [number, number];  // For line emitter
+  end?: [number, number];    // For line emitter
+  id?: string;              // For emitter identification
+  palette?: ColorPalette;   // For color variations
+}
 
 export interface FluidParams {
   dt: number;
@@ -28,6 +42,15 @@ export interface FluidParams {
   noiseScale: number;
   pulseSpeed: number;
   waveAmplitude: number;
+  pressure: number;
+  useCurrentPalette?: boolean;
+  updateParams?: (params: Partial<FluidParams>) => void;
+}
+
+export interface TimelineKeyframe {
+  time: number;
+  properties: Partial<EmitterProps>;
+  emitterId: number | string;  // ID of the emitter this keyframe affects
 }
 
 interface AppState extends FluidParams {
@@ -38,6 +61,13 @@ interface AppState extends FluidParams {
   setRenderMode: (mode: 'dye' | 'velocity' | 'pressure' | 'temperature') => void;
   audioData: Uint8Array | null;
   setAudioData: (data: Uint8Array | null) => void;
+  fluidSolver: FluidSolver | null;
+  emitters: EmitterProps[];
+  selectedEmitter: number | null;
+  timeline: TimelineKeyframe[];
+  addEmitter: (emitter: EmitterProps) => void;
+  setSelectedEmitter: (index: number | null) => void;
+  addKeyframe: (keyframe: TimelineKeyframe) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -69,6 +99,7 @@ export const useStore = create<AppState>((set) => ({
   noiseScale: 1.0,
   pulseSpeed: 1.0,
   waveAmplitude: 0.0,
+  pressure: 0.0,
 
   // Display settings
   backgroundColor: [0, 0, 0],
@@ -79,5 +110,14 @@ export const useStore = create<AppState>((set) => ({
 
   // Audio
   audioData: null,
-  setAudioData: (data) => set({ audioData: data })
+  setAudioData: (data) => set({ audioData: data }),
+
+  // Fluid simulation
+  fluidSolver: null,
+  emitters: [],
+  selectedEmitter: null,
+  timeline: [],
+  addEmitter: (emitter) => set((state) => ({ emitters: [...state.emitters, emitter] })),
+  setSelectedEmitter: (index) => set({ selectedEmitter: index }),
+  addKeyframe: (keyframe) => set((state) => ({ timeline: [...state.timeline, keyframe] }))
 })); 

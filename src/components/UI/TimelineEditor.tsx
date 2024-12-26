@@ -1,35 +1,32 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useStore } from '../../store/useStore';
+import type { TimelineKeyframe } from '../../store/useStore';
 
 export function TimelineEditor() {
-  const [currentTime, setCurrentTime] = useState(0);
-  const timeline = useStore(state => state.timeline);
-  const addKeyframe = useStore(state => state.addKeyframe);
   const selectedEmitter = useStore(state => state.selectedEmitter);
+  const addKeyframe = useStore(state => state.addKeyframe);
+  const timeline = useStore(state => state.timeline);
+  const [currentTime, setCurrentTime] = useState(0);
 
   const handleAddKeyframe = () => {
-    if (!selectedEmitter) return;
-    
-    addKeyframe({
+    if (selectedEmitter === null) return;
+
+    const keyframe: TimelineKeyframe = {
       time: currentTime,
       emitterId: selectedEmitter,
-      property: 'position',
-      value: [0, 0] // Default position
-    });
+      properties: {
+        position: [0, 0],
+        color: [1, 1, 1],
+        strength: 1
+      }
+    };
+
+    addKeyframe(keyframe);
   };
 
   return (
-    <div style={{
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: '100px',
-      background: 'rgba(0,0,0,0.8)',
-      color: 'white',
-      padding: '10px'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+    <div className="timeline-editor">
+      <div className="timeline-controls">
         <input
           type="range"
           min="0"
@@ -37,41 +34,14 @@ export function TimelineEditor() {
           step="0.1"
           value={currentTime}
           onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
-          style={{ flex: 1 }}
         />
-        <span>{currentTime.toFixed(2)}s</span>
-        <button
-          onClick={handleAddKeyframe}
-          disabled={!selectedEmitter}
-          style={{
-            padding: '5px 10px',
-            background: selectedEmitter ? '#4CAF50' : '#ccc',
-            border: 'none',
-            borderRadius: '4px',
-            color: 'white',
-            cursor: selectedEmitter ? 'pointer' : 'not-allowed'
-          }}
-        >
+        <button onClick={handleAddKeyframe} disabled={selectedEmitter === null}>
           Add Keyframe
         </button>
       </div>
-
-      <div style={{
-        marginTop: '10px',
-        display: 'flex',
-        gap: '5px',
-        overflowX: 'auto'
-      }}>
+      <div className="timeline-keyframes">
         {timeline.map((kf, index) => (
-          <div
-            key={index}
-            style={{
-              background: '#4CAF50',
-              padding: '5px',
-              borderRadius: '4px',
-              fontSize: '12px'
-            }}
-          >
+          <div key={index} className="keyframe">
             {kf.emitterId} - {kf.time.toFixed(2)}s
           </div>
         ))}

@@ -32,14 +32,23 @@ export class LineEmitter extends BaseEmitter {
 
   public update(time: number): void {
     if (this.line && this.props.start && this.props.end) {
+      const offset = Math.sin(time * 2) * 0.1;
+      const newStart = [
+        this.props.start[0],
+        this.props.start[1] + offset
+      ] as [number, number];
+      const newEnd = [
+        this.props.end[0],
+        this.props.end[1] + offset
+      ] as [number, number];
+      
       const points = [
-        new THREE.Vector3(this.props.start[0], this.props.start[1], 0),
-        new THREE.Vector3(this.props.end[0], this.props.end[1], 0)
+        new THREE.Vector3(newStart[0], newStart[1], 0),
+        new THREE.Vector3(newEnd[0], newEnd[1], 0)
       ];
       
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      this.line.geometry.dispose();
-      this.line.geometry = geometry;
+      this.line.geometry.setFromPoints(points);
+      // BufferGeometry automatically handles updates
     }
   }
 
